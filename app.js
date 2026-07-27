@@ -11,7 +11,7 @@ async function analyzeText() {
   outputDiv.innerHTML = "⏳ Analyzing research text... Please wait...";
 
   // Apni Gemini API key single quotes ke andar paste karein
-  const API_KEY = 'AQ.Ab8RN6KN_OI-YjxvGl2HFoP49Pn8FrN'; 
+  const API_KEY = 'AQ.Ab8RN6JY_QP8L7e9UNLIfzRHVLyO736bW-khWfnjGLfzeJd0TA'; 
   
   const systemPrompt = `You are ScholarAI, an expert AI Research Assistant. 
   Your task is to analyze academic text or research topics and provide:
