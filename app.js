@@ -11,20 +11,35 @@ async function analyzeText() {
   outputDiv.style.display = "block";
   outputDiv.innerHTML = "⏳ Analyzing research text... Please wait...";
 
-  const systemPrompt = "You are ScholarAI, an expert AI Research Assistant. Analyze the input text and provide: 1. Key Summary (Bullet points) 2. Main Research Findings 3. Suggested Academic References. Input: ";
-  
-  const fullPrompt = encodeURIComponent(systemPrompt + input);
+  const systemPrompt = "You are ScholarAI, an expert AI Research Assistant. Analyze the input text and provide: 1. Key Summary (Bullet points) 2. Main Research Findings 3. Suggested Academic References.";
 
   try {
-    const response = await fetch(`https://text.pollinations.ai/${fullPrompt}`);
+    const response = await fetch("https://text.pollinations.ai/", {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: input }
+        ],
+        model: "mistral"
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error("Server responded with status " + response.status);
+    }
+
     const data = await response.text();
 
-    if (data && data.length > 0) {
+    if (data && !data.includes("error")) {
       outputDiv.innerText = data;
     } else {
-      outputDiv.innerText = "Could not generate analysis. Please try again.";
+      outputDiv.innerText = "Error: Service temporarily unavailable. Please try again.";
     }
   } catch (error) {
-    outputDiv.innerText = "Error: " + error.message;
+    outputDiv.innerText = "Error connecting to AI service: " + error.message;
   }
 }
