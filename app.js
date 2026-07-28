@@ -1,3 +1,4 @@
+
 async function analyzeText() {
   const input = document.getElementById('researchInput').value;
   const outputDiv = document.getElementById('output');
@@ -10,35 +11,20 @@ async function analyzeText() {
   outputDiv.style.display = "block";
   outputDiv.innerHTML = "⏳ Analyzing research text... Please wait...";
 
-  // Free Open Endpoint / Demo API setup
-  const systemPrompt = `You are ScholarAI, an expert AI Research Assistant. 
-Analyze the input text/topic and provide:
-1. Key Summary (Bullet points)
-2. Main Research Findings
-3. Suggested Academic References / Citations
-Be clear, formal, and academic in tone.`;
+  const systemPrompt = "You are ScholarAI, an expert AI Research Assistant. Analyze the input text and provide: 1. Key Summary (Bullet points) 2. Main Research Findings 3. Suggested Academic References. Input: ";
+  
+  const fullPrompt = encodeURIComponent(systemPrompt + input);
 
   try {
-    const response = await fetch("https://text.pollinations.ai/", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: input }
-        ],
-        model: "openai"
-      })
-    });
-
+    const response = await fetch(`https://text.pollinations.ai/${fullPrompt}`);
     const data = await response.text();
 
-    if (data) {
+    if (data && data.length > 0) {
       outputDiv.innerText = data;
     } else {
-      outputDiv.innerText = "Could not generate output. Please try again.";
+      outputDiv.innerText = "Could not generate analysis. Please try again.";
     }
   } catch (error) {
-    outputDiv.innerText = "Error connecting to AI service: " + error.message;
+    outputDiv.innerText = "Error: " + error.message;
   }
 }
